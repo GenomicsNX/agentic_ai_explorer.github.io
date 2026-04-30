@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agentic AI Architecture Explorer</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #ffffff;
+    color: #1a1a1a;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #app {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 16px;
+  }
+
+  #diagram-wrap {
+    width: 100%;
+  }
+
+  #diagram-wrap svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .node-box { cursor: pointer; }
+  .node-box:hover rect { opacity: 0.82; }
+  .node-box.active rect { stroke-width: 2.5px !important; }
+
+  #detail-panel {
+    display: none;
+    border-top: 1px solid #e5e5e5;
+    padding: 20px 24px;
+    background: #f8f8f8;
+    border-radius: 0 0 12px 12px;
+    margin-top: 4px;
+  }
+
+  #detail-panel.visible { display: block; }
+
+  #detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  #detail-title-wrap { display: flex; align-items: center; gap: 10px; }
+
+  #detail-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #111;
+  }
+
+  #detail-badge {
+    font-size: 11px;
+    padding: 2px 9px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+
+  #close-btn {
+    background: #fff;
+    border: 1px solid #d5d5d5;
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    color: #555;
+    transition: background .15s;
+  }
+  #close-btn:hover { background: #f0f0f0; }
+
+  #detail-body {
+    font-size: 13.5px;
+    color: #444;
+    line-height: 1.75;
+    column-count: 2;
+    column-gap: 32px;
+  }
+
+  #detail-body h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #111;
+    margin: 12px 0 3px;
+    break-after: avoid;
+  }
+
+  #detail-body p { margin-bottom: 6px; }
+
+  #detail-body h4:first-child { margin-top: 0; }
+
+  #footer {
+    text-align: center;
+    font-size: 11px;
+    color: #aaa;
+    padding: 10px 0 4px;
+  }
+
+  /* SVG text styles */
+  .t  { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; fill: #1a1a1a; }
+  .ts { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 12px; fill: #555; }
+  .th { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; font-weight: 600; fill: #1a1a1a; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="diagram-wrap">
+    <svg viewBox="0 0 940 470" xmlns="http://www.w3.org/2000/svg" role="img">
+      <title>Agentic AI Architecture</title>
+      <desc>Interactive architecture diagram — click any box to read a detailed explanation.</desc>
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="#aaa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+
+      <!-- Title -->
+      <text class="th" x="470" y="22" text-anchor="middle" style="font-size:16px;fill:#111">Agentic AI = LLMs + Memory + Tools + Autonomy</text>
+      <text class="ts" x="470" y="40" text-anchor="middle" style="fill:#888">Four nested layers, each building on the last — click any box to explore</text>
+
+      <!-- ── LAYER 1 FOUNDATIONS ── -->
+      <rect x="12" y="50" width="214" height="390" rx="10" fill="none" stroke="#ccc" stroke-width="0.8"/>
+      <text class="ts" x="22" y="65" style="fill:#999;font-size:9px;letter-spacing:.07em">LAYER 1 · FOUNDATIONS</text>
+
+      <g class="node-box" id="box-ai-ml" onclick="showBox('ai-ml')">
+        <rect x="22" y="70" width="194" height="96" rx="7" fill="#F1EFE8" stroke="#aaa" stroke-width="0.8"/>
+        <text class="th" x="119" y="92" text-anchor="middle" style="fill:#2c2c2a">AI &amp; ML</text>
+        <text class="ts" x="119" y="110" text-anchor="middle">Supervised · unsupervised</text>
+        <text class="ts" x="119" y="126" text-anchor="middle">Reinforcement learning</text>
+        <text class="ts" x="119" y="142" text-anchor="middle">Reasoning &amp; problem solving</text>
+      </g>
+
+      <g class="node-box" id="box-nn" onclick="showBox('nn')">
+        <rect x="22" y="176" width="194" height="96" rx="7" fill="#F1EFE8" stroke="#aaa" stroke-width="0.8"/>
+        <text class="th" x="119" y="198" text-anchor="middle" style="fill:#2c2c2a">Neural networks</text>
+        <text class="ts" x="119" y="216" text-anchor="middle">CNNs · RNNs · LSTMs</text>
+        <text class="ts" x="119" y="232" text-anchor="middle">Transformers</text>
+        <text class="ts" x="119" y="248" text-anchor="middle">Attention mechanisms</text>
+      </g>
+
+      <g class="node-box" id="box-outputs" onclick="showBox('outputs')">
+        <rect x="22" y="282" width="194" height="80" rx="7" fill="#E1F5EE" stroke="#1D9E75" stroke-width="0.8"/>
+        <text class="th" x="119" y="304" text-anchor="middle" style="fill:#085041">Outputs &amp; interfaces</text>
+        <text class="ts" x="119" y="322" text-anchor="middle" style="fill:#0F6E56">Code · image · video · audio</text>
+        <text class="ts" x="119" y="338" text-anchor="middle" style="fill:#0F6E56">Dashboards · recommendations</text>
+      </g>
+
+      <text class="ts" x="22" y="385" style="fill:#bbb;font-size:9px">Key tech: LLMs · Transformers · Diffusion · RL</text>
+
+      <line x1="228" y1="252" x2="248" y2="252" stroke="#ccc" stroke-width="1" marker-end="url(#arr)"/>
+
+      <!-- ── LAYER 2 COGNITIVE ── -->
+      <rect x="250" y="50" width="214" height="390" rx="10" fill="none" stroke="#5DCAA5" stroke-width="0.8"/>
+      <text class="ts" x="260" y="65" style="fill:#0F6E56;font-size:9px;letter-spacing:.07em">LAYER 2 · COGNITIVE COMPUTING</text>
+
+      <g class="node-box" id="box-knowledge" onclick="showBox('knowledge')">
+        <rect x="260" y="70" width="194" height="80" rx="7" fill="#E1F5EE" stroke="#1D9E75" stroke-width="0.8"/>
+        <text class="th" x="357" y="92" text-anchor="middle" style="fill:#085041">Knowledge</text>
+        <text class="ts" x="357" y="110" text-anchor="middle" style="fill:#0F6E56">RAG · vector search</text>
+        <text class="ts" x="357" y="128" text-anchor="middle" style="fill:#0F6E56">Knowledge graphs</text>
+        <text class="ts" x="357" y="146" text-anchor="middle" style="fill:#0F6E56">Semantic retrieval</text>
+      </g>
+
+      <g class="node-box" id="box-tools" onclick="showBox('tools')">
+        <rect x="260" y="160" width="194" height="80" rx="7" fill="#E1F5EE" stroke="#1D9E75" stroke-width="0.8"/>
+        <text class="th" x="357" y="182" text-anchor="middle" style="fill:#085041">Tool use</text>
+        <text class="ts" x="357" y="200" text-anchor="middle" style="fill:#0F6E56">Function calling · API integration</text>
+        <text class="ts" x="357" y="218" text-anchor="middle" style="fill:#0F6E56">Plugins · tool orchestration</text>
+      </g>
+
+      <g class="node-box" id="box-memory" onclick="showBox('memory')">
+        <rect x="260" y="250" width="194" height="80" rx="7" fill="#E1F5EE" stroke="#1D9E75" stroke-width="0.8"/>
+        <text class="th" x="357" y="272" text-anchor="middle" style="fill:#085041">Memory systems</text>
+        <text class="ts" x="357" y="290" text-anchor="middle" style="fill:#0F6E56">Short-term · long-term storage</text>
+        <text class="ts" x="357" y="308" text-anchor="middle" style="fill:#0F6E56">State persistence</text>
+      </g>
+
+      <g class="node-box" id="box-reasoning" onclick="showBox('reasoning')">
+        <rect x="260" y="340" width="194" height="66" rx="7" fill="#EEEDFE" stroke="#7F77DD" stroke-width="0.8"/>
+        <text class="th" x="357" y="362" text-anchor="middle" style="fill:#3C3489">Reasoning</text>
+        <text class="ts" x="357" y="380" text-anchor="middle" style="fill:#534AB7">ReAct · CoT · ToT · planning</text>
+      </g>
+
+      <line x1="466" y1="252" x2="486" y2="252" stroke="#ccc" stroke-width="1" marker-end="url(#arr)"/>
+
+      <!-- ── LAYER 3 AUTONOMOUS ── -->
+      <rect x="488" y="50" width="214" height="390" rx="10" fill="none" stroke="#7F77DD" stroke-width="0.8"/>
+      <text class="ts" x="498" y="65" style="fill:#534AB7;font-size:9px;letter-spacing:.07em">LAYER 3 · AUTONOMOUS SYSTEMS</text>
+
+      <g class="node-box" id="box-coordination" onclick="showBox('coordination')">
+        <rect x="498" y="70" width="194" height="80" rx="7" fill="#EEEDFE" stroke="#7F77DD" stroke-width="0.8"/>
+        <text class="th" x="595" y="92" text-anchor="middle" style="fill:#3C3489">Agent coordination</text>
+        <text class="ts" x="595" y="110" text-anchor="middle" style="fill:#534AB7">Multi-agent collaboration</text>
+        <text class="ts" x="595" y="128" text-anchor="middle" style="fill:#534AB7">Task scheduling · delegation</text>
+      </g>
+
+      <g class="node-box" id="box-core" onclick="showBox('core')">
+        <rect x="498" y="160" width="194" height="80" rx="7" fill="#EEEDFE" stroke="#7F77DD" stroke-width="0.8"/>
+        <text class="th" x="595" y="182" text-anchor="middle" style="fill:#3C3489">Core systems</text>
+        <text class="ts" x="595" y="200" text-anchor="middle" style="fill:#534AB7">Autonomous execution</text>
+        <text class="ts" x="595" y="218" text-anchor="middle" style="fill:#534AB7">Failure recovery · validation</text>
+      </g>
+
+      <g class="node-box" id="box-autonomy" onclick="showBox('autonomy')">
+        <rect x="498" y="250" width="194" height="80" rx="7" fill="#EEEDFE" stroke="#7F77DD" stroke-width="0.8"/>
+        <text class="th" x="595" y="272" text-anchor="middle" style="fill:#3C3489">Autonomy management</text>
+        <text class="ts" x="595" y="290" text-anchor="middle" style="fill:#534AB7">Goal chaining · resource allocation</text>
+        <text class="ts" x="595" y="308" text-anchor="middle" style="fill:#534AB7">Self-reflection · self-improvement</text>
+      </g>
+
+      <g class="node-box" id="box-hitl" onclick="showBox('hitl')">
+        <rect x="498" y="340" width="194" height="66" rx="7" fill="#FAECE7" stroke="#D85A30" stroke-width="0.8"/>
+        <text class="th" x="595" y="362" text-anchor="middle" style="fill:#712B13">Human-in-the-loop</text>
+        <text class="ts" x="595" y="380" text-anchor="middle" style="fill:#993C1D">Oversight · feedback · rollback</text>
+      </g>
+
+      <line x1="704" y1="252" x2="724" y2="252" stroke="#ccc" stroke-width="1" marker-end="url(#arr)"/>
+
+      <!-- ── LAYER 4 GOVERNANCE ── -->
+      <rect x="726" y="50" width="206" height="390" rx="10" fill="none" stroke="#D85A30" stroke-width="0.8"/>
+      <text class="ts" x="736" y="65" style="fill:#993C1D;font-size:9px;letter-spacing:.07em">LAYER 4 · GOVERNANCE &amp; FUTURE</text>
+
+      <g class="node-box" id="box-safety" onclick="showBox('safety')">
+        <rect x="736" y="70" width="186" height="80" rx="7" fill="#FAECE7" stroke="#D85A30" stroke-width="0.8"/>
+        <text class="th" x="829" y="92" text-anchor="middle" style="fill:#712B13">Safety &amp; guardrails</text>
+        <text class="ts" x="829" y="110" text-anchor="middle" style="fill:#993C1D">Risk management</text>
+        <text class="ts" x="829" y="128" text-anchor="middle" style="fill:#993C1D">Governance frameworks</text>
+      </g>
+
+      <g class="node-box" id="box-observability" onclick="showBox('observability')">
+        <rect x="736" y="160" width="186" height="80" rx="7" fill="#FAECE7" stroke="#D85A30" stroke-width="0.8"/>
+        <text class="th" x="829" y="182" text-anchor="middle" style="fill:#712B13">Observability</text>
+        <text class="ts" x="829" y="200" text-anchor="middle" style="fill:#993C1D">Tracing · logging</text>
+        <text class="ts" x="829" y="218" text-anchor="middle" style="fill:#993C1D">Memory retention policy</text>
+      </g>
+
+      <g class="node-box" id="box-ethics" onclick="showBox('ethics')">
+        <rect x="736" y="250" width="186" height="80" rx="7" fill="#FAEEDA" stroke="#BA7517" stroke-width="0.8"/>
+        <text class="th" x="829" y="272" text-anchor="middle" style="fill:#633806">Ethics &amp; compliance</text>
+        <text class="ts" x="829" y="290" text-anchor="middle" style="fill:#854F0B">Regulatory frameworks · fairness</text>
+        <text class="ts" x="829" y="308" text-anchor="middle" style="fill:#854F0B">Explainability (XAI)</text>
+      </g>
+
+      <g class="node-box" id="box-future" onclick="showBox('future')">
+        <rect x="736" y="340" width="186" height="66" rx="7" fill="#FAEEDA" stroke="#BA7517" stroke-width="0.8"/>
+        <text class="th" x="829" y="362" text-anchor="middle" style="fill:#633806">Future trends</text>
+        <text class="ts" x="829" y="380" text-anchor="middle" style="fill:#854F0B">Long-term autonomy</text>
+        <text class="ts" x="829" y="398" text-anchor="middle" style="fill:#854F0B">Agent markets</text>
+      </g>
+
+      <!-- Legend -->
+      <rect x="12" y="450" width="10" height="10" rx="2" fill="#F1EFE8" stroke="#aaa" stroke-width="0.8"/>
+      <text class="ts" x="27" y="460" style="fill:#999">Foundations</text>
+      <rect x="115" y="450" width="10" height="10" rx="2" fill="#E1F5EE" stroke="#1D9E75" stroke-width="0.8"/>
+      <text class="ts" x="130" y="460" style="fill:#999">Cognitive</text>
+      <rect x="210" y="450" width="10" height="10" rx="2" fill="#EEEDFE" stroke="#7F77DD" stroke-width="0.8"/>
+      <text class="ts" x="225" y="460" style="fill:#999">Autonomous</text>
+      <rect x="330" y="450" width="10" height="10" rx="2" fill="#FAECE7" stroke="#D85A30" stroke-width="0.8"/>
+      <text class="ts" x="345" y="460" style="fill:#999">Governance</text>
+      <rect x="435" y="450" width="10" height="10" rx="2" fill="#FAEEDA" stroke="#BA7517" stroke-width="0.8"/>
+      <text class="ts" x="450" y="460" style="fill:#999">Ethics &amp; future</text>
+    </svg>
+  </div>
+
+  <div id="detail-panel">
+    <div id="detail-header">
+      <div id="detail-title-wrap">
+        <span id="detail-title"></span>
+        <span id="detail-badge"></span>
+      </div>
+      <button id="close-btn" onclick="closePanel()">&#x2715; Close</button>
+    </div>
+    <div id="detail-body"></div>
+  </div>
+
+  <div id="footer">Agentic AI Architecture Explorer &nbsp;·&nbsp; Click any box to explore</div>
+</div>
+
+<script>
+const CONTENT = {
+  'ai-ml': {
+    title: 'AI & ML — the learning foundation',
+    badge: 'Layer 1', badgeColor: '#5F5E5A', badgeBg: '#E8E6DC',
+    html: `<h4>Supervised learning</h4><p>Models trained on labeled input-output pairs. Given enough examples, they generalize to new inputs. Underpins image classifiers, toxicity detectors, and most clinical prediction models.</p>
+      <h4>Unsupervised learning</h4><p>Finding structure in unlabeled data — clustering patients by gene expression, compressing high-dimensional omics data, detecting anomalies without knowing what "normal" looks like.</p>
+      <h4>Reinforcement learning</h4><p>An agent learns by taking actions and receiving rewards. Critical for agentic AI — it's how agents learn to sequence tool calls, recover from failures, and optimize long-horizon goals. RLHF is how modern LLMs are aligned.</p>
+      <h4>Reasoning & problem solving</h4><p>Beyond pattern recognition — symbolic reasoning, constraint satisfaction, logical inference. Modern LLMs blend statistical and symbolic approaches, enabling multi-step deduction over complex inputs.</p>`
+  },
+  'nn': {
+    title: 'Neural networks — the architecture layer',
+    badge: 'Layer 1', badgeColor: '#5F5E5A', badgeBg: '#E8E6DC',
+    html: `<h4>CNNs (convolutional neural networks)</h4><p>Exploit spatial locality via shared filters — dominant for image and genomic sequence data, where nearby features are strongly correlated.</p>
+      <h4>RNNs & LSTMs</h4><p>Process sequential data with recurrent connections. LSTMs add gating mechanisms to preserve long-range dependencies — foundational for NLP before transformers replaced them.</p>
+      <h4>Transformers</h4><p>The current dominant architecture. Process entire sequences in parallel via self-attention, enabling massive scaling. GPT, BERT, and all modern LLMs are transformer-based.</p>
+      <h4>Attention mechanisms</h4><p>Each output element attends to all input elements with learned weights. This allows models to capture long-range dependencies and context — the key innovation that makes LLMs powerful.</p>
+      <h4>Deep belief networks</h4><p>Stacked generative models — precursors to modern deep learning, still used in specific generative and density estimation tasks where explicit probabilistic structure is needed.</p>`
+  },
+  'outputs': {
+    title: 'Outputs & interfaces — what agents produce',
+    badge: 'Layer 1', badgeColor: '#085041', badgeBg: '#C8EEE1',
+    html: `<h4>Code generation</h4><p>LLMs write, debug, and refactor code across dozens of languages. In agentic settings, code generation becomes a tool — agents write scripts to process data, call APIs, or automate workflows on the fly.</p>
+      <h4>Image & video synthesis</h4><p>Diffusion models generate photorealistic images and videos from text prompts. Increasingly used in drug discovery (molecular visualization), clinical report illustration, and research communication.</p>
+      <h4>Audio generation</h4><p>Text-to-speech (TTS), speech recognition (ASR), and music generation. Enables voice-based agent interfaces and audio data processing pipelines.</p>
+      <h4>Dashboards & recommendations</h4><p>Structured, queryable outputs — the interface between AI reasoning and human decision-making. Particularly relevant for translational data science where insights must be communicated to non-technical stakeholders.</p>`
+  },
+  'knowledge': {
+    title: 'Knowledge — grounding agents in facts',
+    badge: 'Layer 2', badgeColor: '#085041', badgeBg: '#C8EEE1',
+    html: `<h4>Retrieval-augmented generation (RAG)</h4><p>At query time, relevant documents are retrieved from a corpus and injected into the LLM's context. The model reasons over retrieved evidence rather than memorized weights. Essential for literature review agents and clinical guideline bots.</p>
+      <h4>Vector search</h4><p>Text, images, or molecular structures are embedded into a high-dimensional semantic space. Nearest-neighbor search retrieves semantically similar items — far more powerful than keyword matching and the backbone of modern RAG pipelines.</p>
+      <h4>Knowledge graphs</h4><p>Structured representations of entities and relationships (drug → targets → pathways). Enable reasoning over structured facts — critical for drug discovery, target identification, and biomarker discovery pipelines.</p>
+      <h4>Semantic retrieval</h4><p>Understanding intent and meaning rather than surface-level text matching. Enables agents to find relevant knowledge even when the user's phrasing doesn't match document terminology exactly.</p>`
+  },
+  'tools': {
+    title: 'Tool use — agents that act on the world',
+    badge: 'Layer 2', badgeColor: '#085041', badgeBg: '#C8EEE1',
+    html: `<h4>Function calling</h4><p>The LLM generates a structured JSON call specifying which tool to invoke and with what parameters. The tool executes and returns a result the LLM incorporates into its next reasoning step. Supported natively by modern APIs.</p>
+      <h4>API integration</h4><p>Agents query PubMed, ClinicalTrials.gov, internal databases, EHR systems, and proprietary platforms — anything with an API becomes a tool. Enables agents to access live, domain-specific information at runtime.</p>
+      <h4>Plugins & dynamic tooling</h4><p>Rather than a fixed toolset, advanced agents discover and load tools at runtime — selecting the right instrument for the task at hand. This is the agent marketplace concept: specialized tools available on demand.</p>
+      <h4>Tool orchestration</h4><p>Managing multi-tool workflows — sequencing tool calls, handling dependencies, parallelizing when safe, and aggregating results. The orchestration layer separates a capable agent from a simple chatbot with a search button.</p>`
+  },
+  'memory': {
+    title: 'Memory systems — agents that remember',
+    badge: 'Layer 2', badgeColor: '#085041', badgeBg: '#C8EEE1',
+    html: `<h4>Working memory (short-term)</h4><p>The active context window — everything the model currently "sees." Limited in size. Agents must decide what to keep in working memory and what to offload to longer-term stores to avoid overflow.</p>
+      <h4>Episodic memory</h4><p>A log of past actions, observations, and outcomes. Retrieved by relevance at query time via RAG. Enables agents to recall "last time I ran this pipeline, step 3 failed because of X" and avoid repeating mistakes.</p>
+      <h4>Semantic memory</h4><p>Distilled, generalized knowledge — facts, rules, preferences — extracted from episodic memory and stored in vector databases or knowledge graphs. More efficient than replaying raw episode logs.</p>
+      <h4>Procedural memory</h4><p>Learned action sequences stored as tools, code templates, or fine-tuned model weights. The agent "knows how" to do something without re-deriving it from scratch each time.</p>
+      <h4>State persistence</h4><p>For long-running tasks, agents checkpoint their state so work survives session boundaries, failures, and restarts — critical for multi-day workflows like systematic reviews or continuous trial monitoring.</p>`
+  },
+  'reasoning': {
+    title: 'Reasoning — structured thinking in agents',
+    badge: 'Layer 2', badgeColor: '#3C3489', badgeBg: '#DDDCFC',
+    html: `<h4>ReAct (Reason + Act)</h4><p>Interleaves reasoning traces with tool calls: think → act → observe → think again. This tight loop between cognition and action is the dominant paradigm for tool-using agents. Enables agents to course-correct mid-task.</p>
+      <h4>Chain-of-thought (CoT)</h4><p>Prompting the model to reason step-by-step before producing an answer significantly improves accuracy on complex tasks. "Let's think through this" restructures the computation, not just the presentation.</p>
+      <h4>Tree-of-thought (ToT)</h4><p>Rather than a single chain of reasoning, the agent explores multiple branches, evaluates them, and selects the most promising path. Analogous to beam search for reasoning — better for tasks with many plausible solution paths.</p>
+      <h4>Planning</h4><p>Decomposing a high-level goal into a dependency graph of sub-tasks, then scheduling and executing them. LLM-based planners implement this as graph traversal — essential for end-to-end systematic reviews and complex R&D workflows.</p>`
+  },
+  'coordination': {
+    title: 'Agent coordination — teams of agents',
+    badge: 'Layer 3', badgeColor: '#3C3489', badgeBg: '#DDDCFC',
+    html: `<h4>Multi-agent collaboration</h4><p>A planner agent decomposes tasks and delegates to specialist agents (literature search, data extraction, statistical analysis). Results are aggregated by a synthesis agent. Mirrors how research teams work — and maps directly onto systematic review workflows.</p>
+      <h4>Task scheduling</h4><p>Determining which sub-tasks can run in parallel vs. sequentially, managing dependencies, and allocating compute resources. Critical for large-scale pipelines — e.g., screening 50,000 abstracts across multiple parallel agents.</p>
+      <h4>Agent protocols</h4><p>Standardized message formats and handoff interfaces between agents — the API contracts of the multi-agent world. Emerging standards include OpenAI's function-calling schema and Anthropic's tool use API.</p>
+      <h4>Delegation & handoff</h4><p>When an agent recognizes it's outside its competence, it routes the task to a more appropriate specialist. Requires capability awareness and trust scoring between agents in the network.</p>`
+  },
+  'core': {
+    title: 'Core systems — the engine of autonomy',
+    badge: 'Layer 3', badgeColor: '#3C3489', badgeBg: '#DDDCFC',
+    html: `<h4>Autonomous execution</h4><p>Running multi-step task chains without human prompting at each step. The agent decides what to do next based on its current state and goal — a qualitative shift from chatbot interactions where humans drive every step.</p>
+      <h4>Failure recovery & replanning</h4><p>When a tool fails, a search returns nothing, or an assumption proves wrong, the agent detects the failure, diagnoses the cause, and generates an alternative plan. Robust failure handling separates production agents from research demos.</p>
+      <h4>Output validation</h4><p>Checking agent outputs for correctness, consistency, and safety before acting on them. Can use a separate critic agent, formal verifiers, or confidence scoring. Particularly critical in clinical and regulatory contexts.</p>
+      <h4>Dynamic tooling</h4><p>Discovering and loading tools at runtime rather than relying on a fixed toolset. Enables agents to adapt to new task types without retraining — they find the right tool for the job from an available catalog.</p>`
+  },
+  'autonomy': {
+    title: 'Autonomy management — goals over long horizons',
+    badge: 'Layer 3', badgeColor: '#3C3489', badgeBg: '#DDDCFC',
+    html: `<h4>Goal chaining</h4><p>Decomposing high-level goals into directed graphs of sub-goals, each with preconditions and success criteria. Agents execute the graph, marking sub-goals complete and unlocking downstream tasks. Frameworks like LangGraph implement this as stateful graph traversal.</p>
+      <h4>Resource allocation</h4><p>Budgeting compute, API calls, time, and cost across a long task. Token budgeting truncates low-priority context; priority queues schedule sub-tasks by urgency; learned cost models decide when to invoke expensive tools vs. cheaper approximations.</p>
+      <h4>Self-reflection</h4><p>Periodically re-examining progress against the original goal — catching drift before it compounds. Implemented as a meta-cognitive loop: "Am I still on track? Is my current plan the best path to the goal?" Critic agents can formalize this.</p>
+      <h4>Self-improvement</h4><p>Agents that learn from their own failures — analyzing what went wrong, updating their action policies, and performing better on similar tasks in the future. Closes the loop between performance and capability, enabling agents that improve with use.</p>`
+  },
+  'hitl': {
+    title: 'Human-in-the-loop — keeping humans in control',
+    badge: 'Layer 3', badgeColor: '#712B13', badgeBg: '#F5D4C5',
+    html: `<h4>Oversight checkpoints</h4><p>Predefined points where the agent pauses and requests human review before proceeding. Critical for irreversible actions — submitting a regulatory filing, publishing a report — or when agent confidence drops below a threshold.</p>
+      <h4>Feedback integration</h4><p>Human corrections are fed back into the agent's memory and optionally used to fine-tune the model. This creates a virtuous cycle: human expertise improves agent performance over time, reducing the need for oversight.</p>
+      <h4>Rollback mechanisms</h4><p>The ability to undo agent actions — reverting to a prior state when a mistake is detected. Requires careful state management: agents must checkpoint at each significant action so rollback is possible without losing all progress.</p>
+      <h4>Escalation protocols</h4><p>When an agent encounters a situation outside its training distribution, it must recognize the gap and escalate rather than guess. Confidence scoring and anomaly detection are the technical mechanisms; clear paths to domain experts are the organizational requirement.</p>`
+  },
+  'safety': {
+    title: 'Safety & guardrails — preventing harm at scale',
+    badge: 'Layer 4', badgeColor: '#712B13', badgeBg: '#F5D4C5',
+    html: `<h4>Risk management</h4><p>Identifying, quantifying, and mitigating risks before they materialize. For agentic systems: data leakage, incorrect outputs in downstream decisions, runaway tool use, and adversarial manipulation of agent behavior.</p>
+      <h4>Governance frameworks</h4><p>Organizational structures for oversight — who approves agentic deployments, how incidents are reported, what the escalation path is. In pharma, this intersects directly with GxP and regulatory compliance frameworks.</p>
+      <h4>Feedback evaluators</h4><p>Automated systems that continuously assess agent output quality — catching degradation before it reaches users. Can be rule-based (output must match schema), model-based (critic LLM scores outputs), or statistical (monitor output distribution for drift).</p>
+      <h4>Constraint satisfaction</h4><p>Hard rules the agent cannot violate regardless of its reasoning — rate limits, access controls, data handling policies. Implemented at the infrastructure level, not as soft prompts the agent can reason around.</p>`
+  },
+  'observability': {
+    title: 'Observability — seeing inside agentic systems',
+    badge: 'Layer 4', badgeColor: '#712B13', badgeBg: '#F5D4C5',
+    html: `<h4>Tracing & logging</h4><p>Recording every reasoning step, tool call, and output in a structured, queryable format. Traces answer: "Why did the agent make this decision?" and "What data did it use?" Essential for debugging failures and satisfying regulatory audit requirements.</p>
+      <h4>Memory retention policy</h4><p>Governing what agent memories are kept, for how long, and who can access them. Intersects with data privacy regulations (GDPR, HIPAA) — particularly critical when agents process patient data or proprietary research.</p>
+      <h4>Cost & resource monitoring</h4><p>Tracking compute, API usage, and spend in real time. Agentic systems can consume orders of magnitude more resources than chatbots — without monitoring, costs can spiral unexpectedly across large-scale deployments.</p>
+      <h4>Contact management</h4><p>Tracking which agent instances accessed which data, when, and for what purpose. Enables auditing, access revocation, and incident response when a breach or error is detected in the pipeline.</p>`
+  },
+  'ethics': {
+    title: 'Ethics & compliance — responsible agentic AI',
+    badge: 'Layer 4', badgeColor: '#633806', badgeBg: '#F5E5C0',
+    html: `<h4>Regulatory frameworks</h4><p>The EU AI Act classifies high-risk AI systems (including medical AI) with stringent requirements — conformity assessments, transparency obligations, human oversight mandates. FDA guidance on AI/ML-based SaMD is also evolving rapidly, directly affecting agentic tools in clinical decision support.</p>
+      <h4>AI fairness</h4><p>Ensuring agent outputs don't systematically disadvantage protected groups. In clinical AI, this means auditing model performance across demographics — directly relevant to biomarker-based patient stratification and companion diagnostic development.</p>
+      <h4>Explainability (XAI)</h4><p>Explaining why an agent produced a given output in terms humans can understand and verify. Methods include LIME, SHAP, attention visualization, and natural language justification generation. Required for regulatory submissions and clinical adoption.</p>
+      <h4>Bias detection & mitigation</h4><p>Systematically identifying and correcting biases in training data, model outputs, and agent behavior. Particularly important when agents are trained on historically biased datasets — most biomedical literature over-represents European ancestry populations.</p>`
+  },
+  'future': {
+    title: 'Future trends — where agentic AI is heading',
+    badge: 'Layer 4', badgeColor: '#633806', badgeBg: '#F5E5C0',
+    html: `<h4>Longer-horizon autonomy</h4><p>Agents moving from single-session tasks to multi-day, multi-week workflows — managing projects, monitoring outcomes, and adapting plans without re-prompting. The bottleneck today is reliability over long horizons; rapid improvement is expected.</p>
+      <h4>Agent marketplaces & ecosystems</h4><p>Specialized agents bought, sold, and composed like microservices. A "clinical trial screener" or "oncology literature agent" you license and plug into your pipeline. OpenAI's GPT store and Anthropic's tool ecosystem are early versions of this model.</p>
+      <h4>Multi-agent collaboration at scale</h4><p>Coordinated systems of dozens of specialist agents — planner, coder, reviewer, domain expert — with structured handoff protocols. The research team metaphor made real: each agent contributes its specialty to a shared scientific goal.</p>
+      <h4>Physical world integration</h4><p>Agents operating GUIs, robotic systems, lab instruments, and IoT devices — blurring the line between digital reasoning and physical action. Lab automation agents could design, run, and analyze experiments end-to-end without human intervention.</p>
+      <h4>Governance & regulatory maturity</h4><p>Formal requirements around agent logging, rollback capabilities, and human oversight thresholds — especially for regulated industries. For pharma and clinical research, this will define exactly what agentic systems can and cannot do autonomously.</p>`
+  }
+};
+
+let activeBox = null;
+
+function showBox(id) {
+  const data = CONTENT[id];
+  if (!data) return;
+  if (activeBox) document.getElementById('box-' + activeBox)?.classList.remove('active');
+  activeBox = id;
+  document.getElementById('box-' + id)?.classList.add('active');
+  document.getElementById('detail-title').textContent = data.title;
+  const badge = document.getElementById('detail-badge');
+  badge.textContent = data.badge;
+  badge.style.background = data.badgeBg;
+  badge.style.color = data.badgeColor;
+  document.getElementById('detail-body').innerHTML = data.html;
+  const panel = document.getElementById('detail-panel');
+  panel.classList.add('visible');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function closePanel() {
+  document.getElementById('detail-panel').classList.remove('visible');
+  if (activeBox) {
+    document.getElementById('box-' + activeBox)?.classList.remove('active');
+    activeBox = null;
+  }
+}
+</script>
+</body>
+</html>
